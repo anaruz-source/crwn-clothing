@@ -3,7 +3,7 @@ import HomePage from './pages/homepage/homepage.component'
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component'
 import ShopPage from './pages/shop/shop.component'
 import Header from './components/header/header.component'
-import {auth} from './firebase/firebase.utils'
+import { auth, createUserProfileDocument} from './firebase/firebase.utils'
 import './App.css';
 import { Route, Switch } from 'react-router-dom';
 
@@ -20,9 +20,34 @@ class App extends React.Component {
 
   componentDidMount() {
 
-    auth.onAuthStateChanged(user =>{
-     this.unsubscribeFromAuth =  this.setState({ currentUser: user }) 
-        console.log(user)
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth =>{
+    
+     
+     if(userAuth) { // userAuth null !null => true
+       
+    
+
+       const userRef = await createUserProfileDocument(userAuth)
+
+       userRef.onSnapshot(snap => {
+
+         this.setState({
+           currentUser: {
+
+             id: snap.id,
+             ...snap.data()
+           }
+         }, () => console.log(this.state))
+       })
+    } else {
+
+       this.setState({ currentUser: null })
+
+       
+    }
+
+
+
     })
 
   }
