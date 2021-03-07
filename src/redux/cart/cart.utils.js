@@ -1,4 +1,6 @@
- const addItemToCart = (cartItems, cartItem) => {
+import cartItem from "../../components/cart-item/cart-item.component"
+
+ export const addItemToCart = (cartItems, cartItem) => {
 
  const exitingItem = cartItems.find(item =>  item.id === cartItem.id)
 
@@ -11,4 +13,14 @@
 
 } 
 
-export default addItemToCart
+export const removeItemFromCart = (items, item) => {
+
+  const existingItem = items.find( elem => elem.id === item.id)
+
+  if(existingItem.quantity === 1) {
+
+    return items.filter(elem => elem.id !== item.id)
+  }
+
+  return items.map (elem => elem.id === item.id ? {...elem, quantity: elem.quantity -1} : elem)
+}
