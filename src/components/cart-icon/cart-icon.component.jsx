@@ -12,7 +12,6 @@ const CartIcon = ({toggleCartHidden, itemCount}) => (
       
    
     <div className='cart-icon' onClick = {toggleCartHidden}>
-        {console.log(toggleCartHidden)}
     <ShoppingIcon className='shpping-icon'/>
     <span className='item-count'>{itemCount}</span>
         
