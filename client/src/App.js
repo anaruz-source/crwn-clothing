@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { connect } from 'react-redux'
-import { createStructuredSelector } from 'reselect';
+
+
+import { createUserProfileDocument, auth } from './firebase/firebase.utils'
+import CurrentUserContext from './contexts/current-user/current-user.context'
 
 
 import HomePage from './pages/homepage/homepage.component'
@@ -12,28 +14,57 @@ import CheckOutPage from './pages/checkout/checkout.component'
 
 
 
-import { selectCollectionsForPreview } from './redux/shop/shop.selectors'
-import { selectCurrentUser } from './redux/user/user.selectors'
 
 
-import { checkUserSession } from './redux/user/user.actions'
+
 
 import './App.css';
 
 
-const App = ({ checkUserSession, currentUser  }) =>{
+class App extends React.Component {
  
 
+constructor(){
 
-  useEffect( () => {
+  super()
 
-    checkUserSession()
-  }, [checkUserSession])
+  this.state = {
 
+    currentUser: null
+  }
+}
 
+  componentDidMount() {
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          });
+
+        });
+      }
+
+      this.setState({ currentUser: userAuth });
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFromAuth();
+  }
+
+render() {
+ const { currentUser } = this.state
     return (
       <div>
-        <Header className='header'/>
+        <CurrentUserContext.Provider value={currentUser}>
+          <Header className='header' />
+        </CurrentUserContext.Provider>
         <Switch>
           <Route exact path='/' component={HomePage} />
           <Route path='/shop' component={ShopPage} />
@@ -42,19 +73,12 @@ const App = ({ checkUserSession, currentUser  }) =>{
         </Switch>
 
       </div>
-    );
+    )
+  }
+
   
 }
 
-const mapStateToProps =  createStructuredSelector ({
-  
-  currentUser: selectCurrentUser,
-  collectionsArray: selectCollectionsForPreview
-})
 
-const mapDispatchToProps = dispatch =>({
 
-  checkUserSession: () => dispatch(checkUserSession())
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App
