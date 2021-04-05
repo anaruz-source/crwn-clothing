@@ -23,3 +23,6 @@ export const removeItemFromCart = (items, item) => {
 
   return items.map (elem => elem.id === item.id ? {...elem, quantity: elem.quantity -1} : elem)
 }
+
+
+export const getCartItemsCount =  items => items.reduce((acc, item) => acc + item.quantity, 0)
