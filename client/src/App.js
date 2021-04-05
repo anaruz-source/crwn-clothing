@@ -9,7 +9,7 @@ import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up
 import ShopPage from './pages/shop/shop.component'
 import Header from './components/header/header.component'
 import CheckOutPage from './pages/checkout/checkout.component'
-
+import { GlobalStyle } from './global.styles'
 
 
 import { selectCollectionsForPreview } from './redux/shop/shop.selectors'
@@ -18,7 +18,7 @@ import { selectCurrentUser } from './redux/user/user.selectors'
 
 import { checkUserSession } from './redux/user/user.actions'
 
-import './App.css';
+
 
 
 const App = ({ checkUserSession, currentUser  }) =>{
@@ -33,6 +33,7 @@ const App = ({ checkUserSession, currentUser  }) =>{
 
     return (
       <div>
+        <GlobalStyle />
         <Header className='header'/>
         <Switch>
           <Route exact path='/' component={HomePage} />
