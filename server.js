@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors())
 
-app.use(compression)
+app.use(compression())
 
 if(process.env.NODE_ENV == 'production') {
 
