@@ -6,9 +6,13 @@ const HomePage = () => {
   return(
 
     <HomePageContainer>
-    <Profiler id= 'directory' onRender = { (id, phase, actualDuration) => console.log({id, phase, actualDuration})}>
-      <Directory />
-    </Profiler>
+      
+      <Profiler id= 'directory' onRender = { (id, phase, actualDuration) => console.log({id, phase, actualDuration})}>
+      
+        <Directory />
+      
+      </Profiler>
+      
     </HomePageContainer>
 )
 }
